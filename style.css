@@ -1,0 +1,57 @@
+body {
+    background-color: teal;
+  
+}
+section {
+    text-align: center
+}
+text1 {
+    color: wheat
+}
+input {
+    background-color: teal;
+    color: white
+}
+.wrapper {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .button{
+      text-decoration: none;
+      text-align: center;
+      color: #3cbabe;
+      border: 2px solid #3cbabe;
+      border-radius: 4px;
+      position: relative;
+      width: 150px;
+      line-height: 40px;
+      display: inline-block;
+      font-family: Arial;
+      font-weight: 600;
+      overflow: hidden;
+  }
+  .button:before {
+      content: "";
+      background-color: rgba(255,255,255,0.5);
+      height: 100%;
+      width: 40px;
+      display: block;
+      position: absolute;
+      top: 0;
+      left: -70px;
+      transform: skewX(-45deg) translateX(0px);
+      transition: none;
+    }
+  .button:hover{
+      background-color: #3cbabe;
+      color: #ffffff;
+      border-bottom: 2px solid #319598;
+  }
+  
+  .button:hover:before{
+      transform: skewX(-45deg) translateX(250px);
+      transition: all 0.4s ease-in;
+  }
