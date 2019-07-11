@@ -1,0 +1,17 @@
+{
+    "name": "facebook scrather",
+    "version": "1.0",
+    "description": "Build an Extension!",
+
+     "icons": {
+       "16": "images/scrather16.png",
+       "32": "images/scrather32.png",
+       "64": "images/scrather64.png",
+       "128": "images/scrather128.png"
+     },
+   "browser_action": {
+      "default_popup": "UI.html"
+    },
+
+    "manifest_version": 2
+  }
