@@ -1,0 +1,35 @@
+{
+  "name": "facebookParser",
+  "version": "1.0",
+  "manifest_version": 2,
+  "description": "Parse posts on facebook group and send to backend",
+  "icons": {
+    "16": "images/scrather16.png",
+    "32": "images/scrather32.png",
+    "64": "images/scrather64.png",
+    "128": "images/scrather128.png"
+  },
+  "background": {
+    "persistent": false,
+    "scripts": [
+      "background.js"
+    ]
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.facebook.com/groups/*/*"
+      ],
+      "js": [
+        "content.js"
+      ]
+    }
+  ],
+  "page_action": {
+    "default_title": "FacebookParser",
+    "default_popup": "./popup.html"
+  },
+  "permissions": [
+    "activeTab"
+  ]
+}
