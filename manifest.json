@@ -1,8 +1,9 @@
 {
-    "name": "facebook scrather",
+    "name": "facebookParser",
     "version": "1.0",
-    "description": "Build an Extension!",
+  "manifest_version": 2,
 
+  "description": "Build an Extension!",
      "icons": {
        "16": "images/scrather16.png",
        "32": "images/scrather32.png",
@@ -10,8 +11,11 @@
        "128": "images/scrather128.png"
      },
    "browser_action": {
-      "default_popup": "UI.html"
+     "default_title" : "sort posts",
+      "default_popup": "popup.html"
     },
+    "permissions": [
+    "http://*/*","https://*/*"
+  ]
 
-    "manifest_version": 2
   }
