@@ -8,49 +8,45 @@ var Post = class Post {
         this.image = image;
     }
 };
-function sleep(delay) {
-    var start = new Date().getTime();
-    while (new Date().getTime() < start + delay);
-}
-function pageScroll() {
-    window.scrollBy(0,100);
-    scrolldelay = setTimeout(pageScroll,1);
-}
+
+
 
 chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
-
-    if (msg.text === 'report_back') {
-        var list = [];
-
-// while(document.querySelector(".uiList ._4cg3 ._509- ._4ki") === null){
-//     window.scrollBy(0,100);
-// }
+    function pageScroll() {
+        window.scrollBy(0,1000);
+        if(document.querySelector("#pagelet_group_pager").querySelector('._4-u2').querySelector('.groupsStreamMemeberBox') !== null) {
+            console.log('1');
+            var list = [];
             var len = document.querySelectorAll(".userContent").length;
+            for (let i = 0; i < len; i++) {
 
+                var id = document.querySelector("#pagelet_group_mall").querySelector("div").querySelectorAll("._4-u2, .mbm, ._4mrt, ._5jmm, ._5pat, ._5v3q, ._7cqq, ._4-u8")[i].getAttribute('id');
+                var author = document.querySelectorAll(".fwn .fcg")[i].textContent;
+                var content = document.querySelectorAll(".userContent")[i].textContent;
+                var date = document.querySelectorAll('abbr._5ptz')[i].getAttribute('title');
+                if (document.querySelectorAll('.userContentWrapper')[i].querySelector('._4-eo') !== null) {
+                    var image = document.querySelectorAll('.userContentWrapper')[i].querySelector('._4-eo').getAttribute('href');
+                } else {
+                    var image = '';
+                }
 
-
-        for (let i = 0; i < len; i++) {
-
-            var id = document.querySelectorAll("._3ccb")[i].getAttribute('id');
-            var author = document.querySelectorAll(".fwn .fcg")[i].textContent;
-            var content = document.querySelectorAll(".userContent")[i].textContent;
-            var date = document.querySelectorAll('abbr._5ptz')[i].getAttribute('title');
-            if(document.querySelectorAll('.userContentWrapper')[i].querySelector('._4-eo') !== null) {
-                var image = document.querySelectorAll('.userContentWrapper')[i].querySelector('._4-eo').getAttribute('href');
-            }else{
-                var image = '';
+                let post = new Post(id, author, date, content, image);
+                list.push((post));
             }
 
-            let post = new Post(id, author, date, content, image);
-            list.push((post));
+
+            //console.log(document.querySelector(".clearfix .pvm .groupsStreamMemeberBox"));
+
+            sendResponse(list);
+            window.location.reload();
+            window.scrollTo(0,0);
+            return 0;
+
         }
-
-
-            // window.scrollTo(0,document.querySelector(".pagelet_group_pager"));
-
+        scrolldelay = setTimeout(pageScroll,1);
     }
-
-    sendResponse(list);
-
-
+    if (msg.text === 'report_back') {
+        pageScroll();
+        return true;
+    }
 });
