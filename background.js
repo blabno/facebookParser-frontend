@@ -2,14 +2,10 @@ var urlRegex =new RegExp(/^https?:\/\/(?:[^./?#]+\.)?facebook\.com/);
 
 function doStuffWithDom(list) {
 
-    for (let i = 0; i < list.length; i++) {
+    for (let i = 0; i <list.length; i++) {
         var xhr = new XMLHttpRequest();
-        xhr.open("POST", "http://192.168.0.121:3000/", true);
-        xhr.send(list[i]);
-        setTimeout(function () {
-
-
-        }, 500);
+        xhr.open("POST", "http://192.168.0.123:3000/", true);
+        xhr.send(JSON.stringify(list[i]));
     }
 
 }
