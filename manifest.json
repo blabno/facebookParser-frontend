@@ -15,7 +15,7 @@
     "scripts": ["background.js"]
   },
   "content_scripts": [{
-    "matches": ["<all_urls>"],
+    "matches": ["https://www.facebook.com/groups/*/*"],
     "js": ["content.js"]
   }],
   "browser_action": {
