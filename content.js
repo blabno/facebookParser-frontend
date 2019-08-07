@@ -1,4 +1,4 @@
-let url = '192.168.0.123:3000/last';
+
 var Post = class Post {
 
     constructor(id, author, date, content, image) {
@@ -9,17 +9,16 @@ var Post = class Post {
         this.image = image;
     }
 };
-function httpGet()
-{
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", url, false ); 
-    xmlHttp.send( null );
-    return xmlHttp.responseText;
-}
+
+
 chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
     function pageScroll() {
-        window.scrollBy(0, 1000);
-        if (document.querySelector("#pagelet_group_pager").querySelector('._4-u2').querySelector('.groupsStreamMemeberBox') !== null ) {
+        
+        window.scrollBy(0, 1000); 
+        
+        if (document.querySelector("#pagelet_group_pager").querySelector('._4-u2').querySelector('.groupsStreamMemeberBox') !== null || document.querySelector('\'#' + msg.text + '\'') !== null ) {
+            
+            
             console.log('1');
             var list = [];
             var len = document.querySelectorAll(".userContent").length;
@@ -59,7 +58,8 @@ console.log(document.querySelectorAll('.userContentWrapper')[i].querySelectorAll
         }
         scrolldelay = setTimeout(pageScroll, 1);
     }
-    if (msg.text === 'report_back') {
+    if (msg.text !== 'report_back') {
+        console.log(msg.text);
         pageScroll();
         return true;
     }
