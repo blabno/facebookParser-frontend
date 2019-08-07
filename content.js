@@ -16,7 +16,7 @@ function deleteSeeMore(text, del) {
 chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
     function pageScroll() {
         window.scrollBy(0, 1000);
-        if (document.querySelector("#pagelet_group_pager").querySelector('._4-u2').querySelector('.groupsStreamMemeberBox') !== null) {
+        if (document.querySelector("#pagelet_group_pager").querySelector('._4-u2').querySelector('.groupsStreamMemeberBox') !== null ) {
             console.log('1');
             var list = [];
             var len = document.querySelectorAll(".userContent").length;
