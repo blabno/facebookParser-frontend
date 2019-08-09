@@ -23,7 +23,7 @@ function loop(len, idp) {
             content = content.replace('...', '');
             content = content.replace('Zobacz więcej', '');
         }
-        var date = document.querySelectorAll('.userContentWrapper')[i].querySelector('abbr._5ptz').getAttribute('title');
+         var date = document.querySelectorAll('.userContentWrapper')[i].querySelector('abbr._5ptz').getAttribute('title');
         var image = [];
         if (document.querySelectorAll('.userContentWrapper')[i].querySelectorAll('._4-eo, ._2t9n').length === 1) {
             image = [document.querySelectorAll('.userContentWrapper')[i].querySelector('._4-eo, ._2t9n').querySelector('img').getAttribute('src')];
