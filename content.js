@@ -12,7 +12,6 @@ var Post = class Post {
 
 function loop(len, idp) {
     var list = [];
-
     for (let i = 0; i < len - 1; i++) {
         if (document.querySelector("#pagelet_group_mall").querySelector("div").querySelectorAll("._4-u2, .mbm, ._4mrt, ._5jmm, ._5pat, ._5v3q, ._7cqq, ._4-u8")[i].getAttribute('id') === idp) {
             return list;
@@ -43,7 +42,6 @@ function loop(len, idp) {
 chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
     document.querySelector("._45d0").click()
     document.querySelectorAll("._54nc")[1].click()
-
     function pageScroll() {
         window.scrollBy(0, 1000);
         if (document.getElementById('' + msg.text + '') !== null) {
