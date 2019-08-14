@@ -40,8 +40,7 @@ function loop(len, idp) {
 }
 
 chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
-    document.querySelector("._45d0").click()
-    document.querySelectorAll("._54nc")[1].click()
+
     function pageScroll() {
         window.scrollBy(0, 1000);
         if (document.getElementById('' + msg.text + '') !== null) {
