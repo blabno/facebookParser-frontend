@@ -1,4 +1,4 @@
-let url = '192.168.0.123:3000/last';
+let url = '192.168.0.112:3000/last';
 var Post = class Post {
 
     constructor(id, author, date, content, image) {
