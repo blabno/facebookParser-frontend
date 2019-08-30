@@ -16,14 +16,14 @@ chrome.browserAction.onClicked.addListener(function (tab) {
     function sendPosts(list) {
         for (let i = 0; i < list.length; i++) {
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", "http://192.168.0.124:3000/"+pathVariable, true);
+            xhr.open("POST", "http://192.168.0.124:3000/savePosts/"+pathVariable, true);
             xhr.send(JSON.stringify(list[i]));
         }
     }
 
     function httpGet() {
         var xmlHttp = new XMLHttpRequest();
-        xmlHttp.open("GET", 'http://192.168.0.124:3000/last/'+pathVariable, false);
+        xmlHttp.open("GET", 'http://192.168.0.124:3000/lastPostInContainer/'+pathVariable, false);
         xmlHttp.send(null);
         return xmlHttp.responseText;
     }
