@@ -1,21 +1,7 @@
 const urlRegex = new RegExp(/^https?:\/\/(?:[^./?#]+\.)?facebook\.com/);
-let pathVariable = '' ;
-function sendPosts(list) {
-  for (let i = 0; i < list.length; i++) {
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", "http://192.168.0.124:3000/"+pathVariable, true);
-    xhr.send(JSON.stringify(list[i]));
-  }
-}
+var pathVariable = '';
 
-function httpGet() {
-  var xmlHttp = new XMLHttpRequest();
-  xmlHttp.open("GET", 'http://192.168.0.124:3000/last/'+pathVariable, false);
-  xmlHttp.send(null);
-  return xmlHttp.responseText;
-}
-
-chrome.browserAction.onClicked.addListener(function (tab) {
+chrome.tabs.onUpdated.addListener(function (tabId , info) {
     chrome.tabs.query({
         active: true,
         currentWindow: true
@@ -24,6 +10,23 @@ chrome.browserAction.onClicked.addListener(function (tab) {
         let urlParts = url.split('/');
         pathVariable = urlParts[3];
     });
+});
+chrome.browserAction.onClicked.addListener(function (tab) {
+
+    function sendPosts(list) {
+        for (let i = 0; i < list.length; i++) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "http://192.168.0.124:3000/"+pathVariable, true);
+            xhr.send(JSON.stringify(list[i]));
+        }
+    }
+
+    function httpGet() {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open("GET", 'http://192.168.0.124:3000/last/'+pathVariable, false);
+        xmlHttp.send(null);
+        return xmlHttp.responseText;
+    }
   if (urlRegex.test(tab.url)) {
     chrome.tabs.sendMessage(tab.id, {text: httpGet()}, sendPosts);
   } else {
