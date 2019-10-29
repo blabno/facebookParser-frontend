@@ -18,7 +18,7 @@
   "content_scripts": [
     {
       "matches": [
-        "https://www.facebook.com/groups/*/*"
+        "https://www.facebook.com/groups/*"
       ],
       "js": [
         "content.js"
