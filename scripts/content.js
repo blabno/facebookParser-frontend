@@ -1,7 +1,9 @@
 (function () {
-  const data = {
-    status: null
+  const FBParser = {
+    status: null,
+    isRunnig: false
   };
+
   function init() {
     chrome.runtime.sendMessage({ type: "FBParser_Activate" });
     if (!isExceptAddress()) {
@@ -12,7 +14,7 @@
 
   function getStatus(request, _sender, callback) {
     if ('FBParser_GetStatus' === request.type) {
-      callback(data.status);
+      callback(FBParser.status);
     }
   }
 
@@ -51,9 +53,25 @@
     }
   }
 
+  function parseNextPost() {
+    const postElement = document.querySelector('div[id^=mall_post_]');
+    if (!postElement) {
+      // Todo: wait and try again parseNextPost(), done if Facebook show 'no more posts'
+      return;
+    }
+    const post = new Post(postElement);
+    chrome.runtime.sendMessage({ type: 'FBParser_PostItem', post: post.getData() });
+    // postElement.remove();
+    // setTimeout(parseNextPost, 500);
+  }
+
   function start() {
-    data.status = 'Processing';
-    // parsing data and send to backend
+    if (FBParser.isRunnig) {
+      return;
+    }
+    FBParser.status = 'Processing';
+    FBParser.isRunnig = true;
+    parseNextPost();
   }
 
   chrome.runtime.onMessage.addListener(process);
