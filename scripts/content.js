@@ -1,7 +1,15 @@
 (function () {
   const FBParser = {
-    status: null,
-    isRunnig: false
+    stop: false,
+    backendUrl: 'http://localhost:3000',
+    status: {
+      parsed: 0,
+      saved: 0,
+      message: null
+    },
+    isRunnig: false,
+    postToSaveAtLast: null,
+    lastSavedPost: null
   };
 
   function init() {
@@ -14,7 +22,17 @@
 
   function getStatus(request, _sender, callback) {
     if ('FBParser_GetStatus' === request.type) {
-      callback(FBParser.status);
+      if (FBParser.isRunnig) {
+        callback(`${FBParser.status.message} ${FBParser.status.saved}/${FBParser.status.parsed}`);
+      } else {
+        callback('Idle');
+      }
+    }
+  }
+
+  function stop(request) {
+    if ('FBParser_STOP' === request.type) {
+      FBParser.stop = true;
     }
   }
 
@@ -43,7 +61,7 @@
     return 'CHRONOLOGICAL' === currentSorting && 'true' === currentStatus;
   }
 
-  function process(request, _sender) {
+  function process(request) {
     if ('FBParser_Start' === request.type) {
       if (!isExceptAddress()) {
         prepareAddress();
@@ -53,28 +71,90 @@
     }
   }
 
-  function parseNextPost() {
+  async function parseNextPost() {
+    if (FBParser.stop) { //Todo: Improve, FBparser.postToSaveAtLast -> When start that post have been lost
+      FBParser.isRunnig = false;
+    }
+    window.scrollTo(0, 100);
     const postElement = document.querySelector('div[id^=mall_post_]');
     if (!postElement) {
-      // Todo: wait and try again parseNextPost(), done if Facebook show 'no more posts'
+      const fetchingIndicatorElement = document.querySelector('div.async_saving');
+      if (fetchingIndicatorElement) {
+        setTimeout(parseNextPost, 250);
+      }
+      // Todo: check if FB show info 'No more posts' and save FBParser.postToSaveAtLast
       return;
     }
-    const post = new Post(postElement);
-    chrome.runtime.sendMessage({ type: 'FBParser_PostItem', post: post.getData() });
-    // postElement.remove();
-    // setTimeout(parseNextPost, 500);
+    const post = new Post(postElement).getData();
+    if (post.id === FBParser.lastSavedPost) {
+      await saveLastPost();
+      return;
+    }
+    FBParser.status.parsed++;
+    fetch(`${FBParser.backendUrl}/post`, {
+      method: 'POST',
+      body: JSON.stringify(post),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(() => {
+      FBParser.status.saved++;
+    }).catch(e => {
+      console.log('- - - - -  FB  Parser  - - - - -');
+      console.error(e);
+      console.log('- - - - - E N D  L O G - - - - -');
+    });
+    postElement.remove();
+    window.scrollTo(0, 101);
+    setTimeout(parseNextPost);
+  }
+
+  async function saveLastPost() {
+    return; // Tempolary not save
+    await fetch(`${FBParser.backendUrl}/lastParsedPost`, {
+      method: 'POST',
+      body: JSON.stringify(FBParser.postToSaveAtLast),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(() => {
+      FBParser.status.saved++;
+      FBParser.status.message = 'Done';
+      FBParser.isRunnig = false;
+    }).catch(e => {
+      console.log('- - - - -  FB  Parser  - - - - -');
+      console.error(e);
+      console.log('- - - - - E N D  L O G - - - - -');
+    });
   }
 
   function start() {
     if (FBParser.isRunnig) {
       return;
     }
-    FBParser.status = 'Processing';
+    FBParser.status.message = 'Processing...';
     FBParser.isRunnig = true;
-    parseNextPost();
+    const postElement = document.querySelector('div[id^=mall_post_]');
+    FBParser.postToSaveAtLast = new Post(postElement).getData();
+    if (!FBParser.postToSaveAtLast.groupId) {
+      FBParser.status.message = `Can't process first post`;
+      return;
+    }
+    fetch(`${FBParser.backendUrl}/lastParsedPost/${FBParser.postToSaveAtLast.groupId}`)
+      .then(res => res.json())
+      .then(res => {
+        FBParser.lastSavedPost = res.postId;
+        parseNextPost();
+      }).catch(e => {
+      console.log('- - - - -  FB  Parser  - - - - -');
+      console.error(e);
+      console.log('- - - - - E N D  L O G - - - - -');
+    });
+
   }
 
   chrome.runtime.onMessage.addListener(process);
   chrome.runtime.onMessage.addListener(getStatus);
+  chrome.runtime.onMessage.addListener(stop);
   init();
 })();

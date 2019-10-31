@@ -31,26 +31,22 @@ class Post {
     const element = this.postDOMElement.querySelector('[id^=feed_subtitle] abbr').parentElement;
     const url = element.href.split('/');
     this.href = element.href;
-    this.groupId = url[4];
-    this.id = url[6];
+    this.groupId = Number(url[4]);
+    this.id = Number(url[6]);
   }
 
   setPostOwner() {
     const postOwnerElement = this.postDOMElement.querySelector('h5 a');
-    console.log([postOwnerElement]);
     this.postOwner.name = postOwnerElement.textContent;
     this.postOwner.link = postOwnerElement.href.split('?')[0];
     this.postOwner.id = new URL(`http://test.xyz${postOwnerElement.dataset.hovercard}`).searchParams.get('id');
   }
-
-
+  
   setPostMessage() {
     const removeUnnecessaryElements = (element) => {
       const unnecessaryElements = element.querySelectorAll('[class="text_exposed_hide"]');
-      if (unnecessaryElements.length) {
-        for (let elementToRemove in unnecessaryElements) {
-          elementToRemove.remove();
-        }
+      for (let elementToRemove of unnecessaryElements) {
+        elementToRemove.remove();
       }
     };
     const postMessageElement = this.postDOMElement.querySelector('[data-testid="post_message"]');

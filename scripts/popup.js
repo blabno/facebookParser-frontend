@@ -5,6 +5,7 @@
   };
   const elements = {
     startButton: document.getElementById('start'),
+    stopButton: document.getElementById('stop'),
     status: document.getElementById('status')
   };
 
@@ -15,6 +16,7 @@
 
     getStatus();
     elements.startButton.onclick = start;
+    elements.stopButton.onclick = stop;
 
     setInterval(() => {
       getStatus();
@@ -22,14 +24,15 @@
   }
 
   function start() {
-    // const start = document.getElementById('startDate').value;
-    // const end = document.getElementById('endDate').value;
-    // chrome.runtime.sendMessage({ type: 'FBParser_START', payload: { start, end } });
     chrome.tabs.sendMessage(data.currentTabId, { type: 'FBParser_Start' });
   }
 
+  function stop() {
+    chrome.tabs.sendMessage(data.currentTabId, { type: 'FBParser_STOP' });
+  }
+
   function parseStatus(status) {
-    elements.status.innerText = status || '';
+    elements.status.innerText = status;
   }
 
   function getStatus() {
